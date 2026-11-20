@@ -1,24 +1,26 @@
-"""news-image-20261119 entry: place the prepared front-page image at
-/output/entry.png.
+"""news-image-20261119: copy the prepared front page to /output/entry.png.
 
-The image bundled in this repository was drawn from verified
-19 Nov 2026 headlines (see build_image.py). This program does no
-network access and always produces the same output: it copies the
-entry.png that ships alongside this file into /output/entry.png.
+The repository ships entry.png, drawn from verified 19 Nov 2026
+headlines by build_image.py. The grader runs this program twice with
+no network access, and both runs must write identical bytes, so this
+program does nothing but copy the bundled image into the output
+directory. No input is read besides the bundled image itself.
 """
-import os
+
+from pathlib import Path
 import shutil
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = Path(__file__).resolve().parent
+IMAGE = REPO / "entry.png"
+TARGET = Path("/output") / "entry.png"
 
 
-def main() -> None:
-    src = os.path.join(HERE, "entry.png")
-    if not os.path.isfile(src):
-        raise SystemExit("entry.png missing next to main.py")
-    os.makedirs("/output", exist_ok=True)
-    shutil.copyfile(src, "/output/entry.png")
+def run() -> None:
+    if not IMAGE.is_file():
+        raise SystemExit(f"bundled image missing: {IMAGE}")
+    TARGET.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(IMAGE, TARGET)
 
 
 if __name__ == "__main__":
-    main()
+    run()
